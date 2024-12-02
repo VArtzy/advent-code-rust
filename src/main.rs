@@ -1,6 +1,20 @@
+use std::fs;
+
 fn main() {
-    let mut left = vec![3, 4, 2, 1, 3, 3];
-    let mut right = vec![4, 3, 5, 3, 9, 3];
+    let contents = fs::read_to_string("src/input.txt").expect("should have been able to read the file");
+    let split: Vec<i32> = contents.split_ascii_whitespace().map(|s| s.parse().expect("failed parse")).collect();
+    let mut left: Vec<i32> = vec![];
+    let mut right: Vec<i32> = vec![];
+    let mut counter = 0;
+    for num in split {
+        counter += 1;
+        if counter % 2 == 0 {
+            right.push(num); 
+        } else {
+            left.push(num);
+        }
+    }
+
     let mut idx = 0;
     let mut result = vec![];
     let mut sum = 0;
@@ -14,5 +28,6 @@ fn main() {
     for num in result {
         sum += num;
     }
+
     println!("{}", sum);
 }
