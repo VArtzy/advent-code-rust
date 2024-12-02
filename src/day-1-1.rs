@@ -1,5 +1,3 @@
-use std::fs;
-
 fn main() {
     let contents = fs::read_to_string("src/input.txt").expect("should have been able to read the file");
     let split: Vec<i32> = contents.split_ascii_whitespace().map(|s| s.parse().expect("failed parse")).collect();
@@ -15,9 +13,19 @@ fn main() {
         }
     }
 
-    let mut result = 0;
-    for num in left {
-        result += num as usize * right.iter().filter(|&&x| x == num).count();
+    let mut idx = 0;
+    let mut result = vec![];
+    let mut sum = 0;
+    left.sort();
+    right.sort();
+    while idx < left.len() {
+       let r: i32 = right[idx] - left[idx];
+       result.push(r.abs());
+       idx += 1;
     }
-    println!("{}", result);
+    for num in result {
+        sum += num;
+    }
+
+    println!("{}", sum);
 }
