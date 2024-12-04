@@ -2,22 +2,35 @@ use std::fs;
 
 fn main() {
     let contents = fs::read_to_string("src/input.txt").expect("should have been able to read the file");
-    let split: Vec<i32> = contents.split_ascii_whitespace().map(|s| s.parse().expect("failed parse")).collect();
-    let mut left: Vec<i32> = vec![];
-    let mut right: Vec<i32> = vec![];
-    let mut counter = 0;
-    for num in split {
-        counter += 1;
-        if counter % 2 == 0 {
-            right.push(num); 
-        } else {
-            left.push(num);
+    for line in contents.lines() {
+        let vec: Vec<i32> = line.split_whitespace().map(|s| s.parse().expect("parse failed")).collect();
+        let mut idx = 1;
+        let mut dec = false;
+        let mut inc = false;
+        let mut safe = true;
+        while idx < vec.len() {
+           if vec[idx - 1] < vec[idx] || vec[idx - 1] - vec[idx] > 3 {
+                break;
+           }
+           dec = true;
+           idx += 1;
         }
+        idx = 1;
+        while idx < vec.len() {
+           if vec[idx - 1] > vec[idx] || vec[idx] - vec[idx - 1] > 3 {
+                break;
+           }
+           inc = true;
+           idx += 1;
+        }
+        idx = 1;
+        while idx < vec.len() {
+           if vec[idx - 1] == vec[idx] {
+                safe = false;
+                break;
+           }
+           idx += 1;
+        }
+        println!("inc:{}, dec:{}, safe: {}", inc, dec, safe);
     }
-
-    let mut result = 0;
-    for num in left {
-        result += num as usize * right.iter().filter(|&&x| x == num).count();
-    }
-    println!("{}", result);
 }
